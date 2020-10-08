@@ -1,0 +1,29 @@
+if( grayScale >= 0 && grayScale < 51){
+        return " ";
+    } else if(grayScale < 102){
+        return "/";
+    } else if(grayScale < 153){
+        return "f";
+    } else if(grayScale < 204){
+        return "%%";
+    }
+    return "@";
+
+if( grayScale >= 0 && grayScale < 28.333){
+        return " ";
+    } else if(grayScale < 56.6667){
+        return ".";
+    } else if(grayScale < 84.9996){
+        return ":";
+    } else if(grayScale < 113.3326){
+        return "c";
+    } else if(grayScale < 141.6656){
+        return "o";
+    } else if(grayScale < 169.9986){
+        return "C";
+    } else if(grayScale < 198.3316){
+        return "O";
+    } else if(grayScale < 226.6646){
+        return "8";
+    }
+    return "@";
