@@ -8,7 +8,7 @@
             "name": "gcc - Criar e depurar o arquivo ativo",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${workspaceFolder}/loader",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

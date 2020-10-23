@@ -31,6 +31,10 @@ void resize(int** originalPic, int** reducedPic, Img* origiPic, Img* reduPic){
     int linePosOriginalPic = 0;
     int columPosOriginalPic = 0;
 
+    //800x600
+    // 2 x 2
+    //400x300
+
     float widthRelation = (origiPic->width / (float) reduPic->width);
     float heightRelation = (origiPic->height / (float) reduPic->height);
 
@@ -74,22 +78,32 @@ void load(char* name, Img* pic)
 int main(int argc, char** argv)
 {
     Img pic;
-   // if(argc == 1) {
+    //if(argc == 1) {
     //    printf("loader [img]\n");
     //    exit(1);
     //}
+    int fatorReduc;
+    char nomeImagem[200];
+    printf("Digite o nome da imagem\n");
+    scanf("%s", &nomeImagem);
 
-    load("british_summer.jpg", &pic);
+    printf("Digite o valor de redução\n");
+    scanf("%d", &fatorReduc);
+
+    fatorReduc = 100 - fatorReduc;
+
+    load(nomeImagem, &pic);
+
+
 
     Img reducedPic;
-    reducedPic.height = (int)pic.height/2;
-    reducedPic.width = (int)pic.width/2;
+    reducedPic.height = (int)(pic.height * (fatorReduc/100.0));
+    reducedPic.width = (int)(pic.width * (fatorReduc/100.0));
     reducedPic.totalSize = reducedPic.height * reducedPic.width;
     reducedPic.img = malloc(sizeof(RGB) * reducedPic.totalSize);
     
     printf("%ld\n",sizeof(reducedPic));
     printf("%ld\n",sizeof(pic));
-    char* picture[(int)pic.height / 2][(int) pic.width / 2];
 
     //instanciando a matriz da imagem original dinâmicamente
     int** pxs = malloc(pic.height * sizeof(int*));
@@ -100,9 +114,9 @@ int main(int argc, char** argv)
     //fim da alocação dinâmica
 
     //instanciando a matriz da imagem reduzida dinâmicamente
-    int** reducedPxs = malloc(((int)pic.height / 2) * sizeof(int*));
-    for(int i = 0; i < ((int)pic.height / 2); i++){
-        reducedPxs[i] = malloc(((int)pic.width / 2) * sizeof(int));
+    int** reducedPxs = malloc(((int)reducedPic.height) * sizeof(int*));
+    for(int i = 0; i < ((int)pic.height); i++){
+        reducedPxs[i] = malloc(((int)reducedPic.width) * sizeof(int));
     }
     //fim da alocação dinâmica
 
@@ -114,19 +128,8 @@ int main(int argc, char** argv)
     }
 
     resize(pxs, reducedPxs, &pic, &reducedPic);
-    
-    for(int i = 0; i < ((int)pic.height / 2); i++){
-        for(int j = 0; j < ((int)pic.width / 2); j++){
-            picture[i][j] = chooseCharacter(reducedPxs[i][j]);
-        }
-    }
-
-
-
-
 
     //KISS = Keep it simple stupid
-
 
     // Inverte as cores
     for(int i=0; i<pic.width*pic.height; i++) {
@@ -156,19 +159,19 @@ int main(int argc, char** argv)
     fprintf(arq,"\tpre  {\n \t\tcolor: white;\n\t\tfont-family: Courier;\n\t\tfont-size: 8px;\n\t}\n");
     fprintf(arq,"</style>\n");
     fprintf(arq,"<pre>\n");
-
     int sum = 0;
-    for(int line = 0; line + 5 <= (pic.height); line += 5) {
-        for (int column = 0; column + 4 <= (pic.width); column += 4) {
+    int countColuna = 0;
+    for(int line = 0; line + 5 <= (reducedPic.height); line += 5) {
+        for (int column = 0; column + 4 <= (reducedPic.width); column += 4) {
             for (int sectorLine = line; sectorLine < line + 5; sectorLine++) {
                 for (int sectorColumn = column; sectorColumn < column + 4; sectorColumn++) {
-                    sum += pxs[sectorLine][sectorColumn];
+                    sum += reducedPxs[sectorLine][sectorColumn];
                 }
             }
             fprintf(arq,chooseCharacter((int) round(sum / 20.0f)));
             sum = 0;
         }
-        fprintf(arq,"\n");
+        fprintf(arq,"<br>");
     }
     fprintf(arq,"</pre>\n");
     fprintf(arq,"</body>\n");
@@ -176,4 +179,11 @@ int main(int argc, char** argv)
 
     fclose(arq);
     free(pic.img);
+    free(reducedPic.img);
+    for(int i = 0; i < reducedPic.height; i++){
+        free(reducedPxs[i]);
+    }
+    for(int i = 0; i < pic.height; i++){
+        free(pxs[i]);
+    }
 }
