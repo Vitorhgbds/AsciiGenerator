@@ -48,14 +48,22 @@ void resize(int** originalPic, int** reducedPic, Img* origiPic, Img* reduPic){
 }
 
 char* chooseCharacter(int grayScale){
-    if( grayScale >= 0 && grayScale < 51){
+if( grayScale >= 0 && grayScale < 28.333){
+        return " ";
+    } else if(grayScale < 56.6667){
         return ".";
-    } else if(grayScale < 102){
-        return "/";
-    } else if(grayScale < 153){
-        return "f";
-    } else if(grayScale < 204){
-        return "%%";
+    } else if(grayScale < 84.9996){
+        return ":";
+    } else if(grayScale < 113.3326){
+        return "c";
+    } else if(grayScale < 141.6656){
+        return "o";
+    } else if(grayScale < 169.9986){
+        return "C";
+    } else if(grayScale < 198.3316){
+        return "O";
+    } else if(grayScale < 226.6646){
+        return "8";
     }
     return "@";
 }
@@ -161,29 +169,30 @@ int main(int argc, char** argv)
     fprintf(arq,"<pre>\n");
     int sum = 0;
     int countColuna = 0;
-    for(int line = 0; line + 5 <= (reducedPic.height); line += 5) {
-        for (int column = 0; column + 4 <= (reducedPic.width); column += 4) {
-            for (int sectorLine = line; sectorLine < line + 5; sectorLine++) {
-                for (int sectorColumn = column; sectorColumn < column + 4; sectorColumn++) {
+    for(int line = 0; line + 6 <= (reducedPic.height); line += 6) {
+        for (int column = 0; column + 3 <= (reducedPic.width); column += 3) {
+            for (int sectorLine = line; sectorLine < line + 6; sectorLine++) {
+                for (int sectorColumn = column; sectorColumn < column + 3; sectorColumn++) {
                     sum += reducedPxs[sectorLine][sectorColumn];
                 }
             }
-            fprintf(arq,chooseCharacter((int) round(sum / 20.0f)));
+            fprintf(arq,chooseCharacter((int) round(sum / 18.0f)));
+            printf("%s",chooseCharacter((int) round(sum / 18.0f)));
             sum = 0;
         }
         fprintf(arq,"<br>");
+        printf("\n");
     }
     fprintf(arq,"</pre>\n");
     fprintf(arq,"</body>\n");
     fprintf(arq, "</html>\n");
 
     fclose(arq);
-    free(pic.img);
-    free(reducedPic.img);
-    for(int i = 0; i < reducedPic.height; i++){
-        free(reducedPxs[i]);
-    }
-    for(int i = 0; i < pic.height; i++){
-        free(pxs[i]);
-    }
+    // free(pic.img);
+    // for(int i = 0; i < reducedPic.height; i++){
+    //     free(reducedPxs[i]);
+    // }
+    // for(int i = 0; i < pic.height; i++){
+    //     free(pxs[i]);
+    // }
 }
